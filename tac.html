@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+            margin: 0;
+        }
+
+        .game-container {
+            text-align: center;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .cell:hover {
+            background-color: #d1d1d1;
+        }
+
+        .cell.taken {
+            cursor: not-allowed;
+        }
+
+        .message {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Tic-Tac-Toe</h1>
+        <p class="message">Player X's turn</p>
+        <div class="board">
+            <div class="cell" data-cell-index="0"></div>
+            <div class="cell" data-cell-index="1"></div>
+            <div class="cell" data-cell-index="2"></div>
+            <div class="cell" data-cell-index="3"></div>
+            <div class="cell" data-cell-index="4"></div>
+            <div class="cell" data-cell-index="5"></div>
+            <div class="cell" data-cell-index="6"></div>
+            <div class="cell" data-cell-index="7"></div>
+            <div class="cell" data-cell-index="8"></div>
+        </div>
+        <button onclick="resetGame()">Restart Game</button>
+    </div>
+
+    <script>
+        const cells = document.querySelectorAll('.cell');
+        const message = document.querySelector('.message');
+        let currentPlayer = 'X';
+        let gameBoard = ['', '', '', '', '', '', '', '', ''];
+
+        // Check for a winner
+        const checkWinner = (player) => {
+            const winPatterns = [
+                [0, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+                [0, 3, 6],
+                [1, 4, 7],
+                [2, 5, 8],
+                [0, 4, 8],
+                [2, 4, 6]
+            ];
+            return winPatterns.some(pattern => {
+                return pattern.every(index => gameBoard[index] === player);
+            });
+        };
+
+        // Handle cell click
+        const handleClick = (e) => {
+            const cellIndex = e.target.getAttribute('data-cell-index');
+            if (gameBoard[cellIndex] !== '') return; // Ignore if the cell is already taken
+
+            gameBoard[cellIndex] = currentPlayer;
+            e.target.textContent = currentPlayer;
+            e.target.classList.add('taken');
+
+            if (checkWinner(currentPlayer)) {
+                message.textContent = `${currentPlayer} Wins!`;
+                cells.forEach(cell => cell.removeEventListener('click', handleClick));
+            } else if (!gameBoard.includes('')) {
+                message.textContent = 'It\'s a Tie!';
+            } else {
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                message.textContent = `Player ${currentPlayer}'s turn`;
+            }
+        };
+
+        // Reset the game
+        const resetGame = () => {
+            gameBoard = ['', '', '', '', '', '', '', '', ''];
+            currentPlayer = 'X';
+            message.textContent = `Player X's turn`;
+            cells.forEach(cell => {
+                cell.textContent = '';
+                cell.classList.remove('taken');
+                cell.addEventListener('click', handleClick);
+            });
+        };
+
+        // Initialize the game
+        cells.forEach(cell => {
+            cell.addEventListener('click', handleClick);
+        });
+    </script>
+</body>
+</html>
