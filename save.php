@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $phone = htmlspecialchars($_POST['phone']);
 
     // Change this path to match your desktop path
-    $file_path = "/home/kali/Desktop"; // For Windows
+    $file_path = "data.txt"; // For Windows
     // $file_path = "/Users/YourUsername/Desktop/data.txt"; // For Mac/Linux
 
     $data = "Name: $name, Email: $email, Free Fire ID: $freefire_id, Phone: $phone\n";
